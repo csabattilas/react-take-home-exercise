@@ -1,28 +1,51 @@
 import React from "react";
+import { Task, TaskStatus } from "../models/Task.model";
 
-const TaskItem = ({ task, onDelete, onToggle }: any) => {
+interface TaskItemProps {
+  task: Task;
+  onChangeStatus: (id: number, status: TaskStatus) => void;
+  onDelete: (id: number) => void;
+}
+
+const STATUS_STYLES = {
+  [TaskStatus.COMPLETED]: "line-through text-green-500",
+  [TaskStatus.IN_PROGRESS]: "text-orange-500",
+  [TaskStatus.NEW]: "text-black",
+};
+
+const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onChangeStatus(task.id, Number(e.target.value) as TaskStatus);
+  };
+
+  const handleDelete = () => {
+    onDelete(task.id);
+  };
+
   return (
     <li className="flex items-center justify-between border-b py-2">
-      <span
-        onClick={() => onToggle(task.id)}
-        className={`cursor-pointer ${
-          task.isCompleted ? "text-black" : "line-through text-green-500"
-        }`}
-      >
+      <span className={STATUS_STYLES[task.status]}>
         {task.title}
       </span>
 
-      <button
-        onClick={() => onDelete(task.id)}
-        style={{
-          backgroundColor: "red",
-          color: "white",
-          padding: "4px 8px",
-          borderRadius: "4px",
-        }}
-      >
-        Delete
-      </button>
+      <div className="flex gap-2">    
+        <select
+          value={task.status}
+          onChange={handleStatusChange}
+          className="border rounded px-2 py-1"
+        >
+          <option value={TaskStatus.NEW}>New</option>
+          <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
+          <option value={TaskStatus.COMPLETED}>Completed</option>
+        </select>
+
+        <button
+          onClick={handleDelete}
+          className="bg-red-500 text-white px-2 py-1 rounded"
+        >
+          Delete
+        </button>
+      </div> 
     </li>
   );
 };

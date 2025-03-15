@@ -1,47 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import TaskItem from "./TaskItem";
+import { INITIAL_TASKS } from "../models/Task.structure";
+import { Task, TaskStatus } from "../models/Task.model";
+
+const TASKS_STORAGE_KEY = "tasks";
 
 const TaskManager = () => {
-  const [tasks, setTasks] = useState<any[]>([
-    { id: 1, title: "Buy groceries", completed: false },
-    { id: 2, title: "Clean the house", completed: true },
-  ]);
-  const [filter, setFilter] = useState("all");
-  const [newTask, setNewTask] = useState<string>();
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const savedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
+    return savedTasks ? JSON.parse(savedTasks) : INITIAL_TASKS;
+});
+  const [filter, setFilter] = useState<TaskStatus | null>(null);
+  const [newTask, setNewTask] = useState<string>("");
 
-  // Intentional bug: The filter conditions are reversed.
+  useEffect(() => {
+    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+  }, [tasks]);
+
   const filteredTasks = tasks.filter((task) => {
-    if (filter === "completed") return task.completed === false;
-    if (filter === "pending") return task.completed === true;
+    if (filter === TaskStatus.COMPLETED) return task.status === TaskStatus.COMPLETED;
+    if (filter === TaskStatus.NEW) return task.status === TaskStatus.NEW;
+    if (filter === TaskStatus.IN_PROGRESS) return task.status === TaskStatus.IN_PROGRESS;
     return true;
   });
 
   const handleAddTask = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newTask!.trim() === "") return;
-    const newTaskObj = {
-      id: tasks.length + 1,
-      name: newTask,
-      completed: false,
-    };
-    setTasks([...tasks, newTaskObj]);
-    setNewTask("");
-  };
-
-  // Intentional bug: Directly mutating the tasks array when deleting.
-  const handleDeleteTask = (id: number) => {
-    const index = tasks.findIndex((task) => task.id === id);
-    if (index !== -1) {
-      tasks.splice(index, 1);
-      setTasks(tasks);
+    if (newTask!.trim()) {
+      const newTaskObj = {
+        id: new Date().getTime(),
+        title: newTask,
+        status: TaskStatus.NEW,
+      };
+      setTasks([...tasks, newTaskObj]);
+      setNewTask("");
     }
   };
 
-  const toggleTaskCompletion = (id: number) => {
-    const task = tasks.find((task) => task.id === id);
 
-    task.isCompleted = !task.isCompleted;
+  const handleDeleteTask = (id: number) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const handleChangeStatus = (id: number, newStatus: TaskStatus) => {
+    setTasks(
+      tasks.map((task) => 
+        task.id === id ? { 
+          ...task, 
+          status: newStatus
+        } : task
+      )
+    );
   };
 
   return (
@@ -59,16 +68,28 @@ const TaskManager = () => {
         </button>
       </form>
       <div className="flex justify-around mb-4">
-        <button onClick={() => setFilter("all")} className="text-gray-700">
+        <button 
+          onClick={() => setFilter(null)} 
+          className="text-gray-700"
+        >
           All
         </button>
         <button
-          onClick={() => setFilter("completed")}
+          onClick={() => setFilter(TaskStatus.COMPLETED)}
           className="text-gray-700"
         >
           Completed
         </button>
-        <button onClick={() => setFilter("pending")} className="text-gray-700">
+        <button
+          onClick={() => setFilter(TaskStatus.IN_PROGRESS)}
+          className="text-gray-700"
+        >
+          In Progress
+        </button>
+        <button 
+          onClick={() => setFilter(TaskStatus.NEW)} 
+          className="text-gray-700"
+        >
           Pending
         </button>
       </div>
@@ -78,7 +99,7 @@ const TaskManager = () => {
             key={task.id}
             task={task}
             onDelete={handleDeleteTask}
-            onToggle={toggleTaskCompletion}
+            onChangeStatus={handleChangeStatus}
           />
         ))}
       </ul>
