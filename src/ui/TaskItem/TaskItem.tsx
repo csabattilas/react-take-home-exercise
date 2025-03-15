@@ -1,5 +1,5 @@
 import React from "react";
-import { Task, TaskStatus } from "../models/Task.model";
+import { Task, TaskStatus } from "#model";
 
 interface TaskItemProps {
   task: Task;
@@ -13,7 +13,7 @@ const STATUS_STYLES = {
   [TaskStatus.NEW]: "text-black",
 };
 
-const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
+export const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChangeStatus(task.id, Number(e.target.value) as TaskStatus);
   };
@@ -23,7 +23,7 @@ const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
   };
 
   return (
-    <li className="flex items-center justify-between border-b py-2">
+    <div className="flex items-center justify-between border-b py-2">
       <span className={STATUS_STYLES[task.status]}>
         {task.title}
       </span>
@@ -46,8 +46,6 @@ const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
           Delete
         </button>
       </div> 
-    </li>
+    </div>
   );
 };
-
-export default TaskItem;
