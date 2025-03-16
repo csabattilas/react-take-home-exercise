@@ -11,7 +11,7 @@ export const TaskFilter = ({
     { label: "All", value: null },
     { label: "Completed", value: TaskStatus.COMPLETED },
     { label: "In Progress", value: TaskStatus.IN_PROGRESS },
-    { label: "Pending", value: TaskStatus.NEW },
+    { label: "New", value: TaskStatus.NEW },
   ];
 
   return (
