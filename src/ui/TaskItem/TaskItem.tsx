@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Task, TaskStatus } from "#model";
+import { ConfirmationDialog } from "#ui";
 
 interface TaskItemProps {
   task: Task;
@@ -14,12 +15,23 @@ const STATUS_STYLES = {
 };
 
 export const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
+  const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
+
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChangeStatus(task.id, Number(e.target.value) as TaskStatus);
   };
 
-  const handleDelete = () => {
+  const handleDeleteClick = () => {
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmDelete = () => {
     onDelete(task.id);
+    setShowConfirmation(false);
+  };
+
+  const handleCancelDelete = () => {
+    setShowConfirmation(false);
   };
 
   return (
@@ -40,12 +52,21 @@ export const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
         </select>
 
         <button
-          onClick={handleDelete}
-          className="bg-red-500 text-white px-2 py-1 rounded"
+          onClick={handleDeleteClick}
+          className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
         >
           Delete
         </button>
-      </div> 
+      </div>
+      
+      <ConfirmationDialog
+        isOpen={showConfirmation}
+        title="Confirm Deletion"
+        message="Are you sure you want to delete this task?"
+        highlightedText={task.title}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   );
 };
