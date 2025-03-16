@@ -1,4 +1,4 @@
-import { TaskStatus } from "../../model/Task.model";
+import { TaskStatus } from "#model";
 
 export const TaskFilter = ({ 
   activeFilter, 
@@ -18,14 +18,16 @@ export const TaskFilter = ({
     <div className="flex space-x-2 mb-4">
       {filters.map(({ label, value }) => (
         <button
-          key={label}
-          onClick={() => onFilterChange(value)}
-          className={`px-3 py-1 rounded transition ${
-            activeFilter === value ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-200"
-          }`}
-        >
-          {label}
-        </button>
+        key={label}
+        onClick={() => onFilterChange(value)}
+        className={`px-3 py-1 rounded transition text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-primary-300 ${
+          activeFilter === value 
+            ? "bg-primary-300 text-primary-600 font-medium" 
+            : "text-secondary-700 hover:bg-secondary-100"
+        }`}
+      >
+        {label}
+      </button>
       ))}
     </div>
   );

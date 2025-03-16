@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Task, TaskStatus } from "#model";
 import { ConfirmationDialog } from "#ui";
+import { FaCheck, FaSpinner, FaRegCircle, FaTrash } from "react-icons/fa";
 
 interface TaskItemProps {
   task: Task;
@@ -9,9 +10,15 @@ interface TaskItemProps {
 }
 
 const STATUS_STYLES = {
-  [TaskStatus.COMPLETED]: "line-through text-green-500",
-  [TaskStatus.IN_PROGRESS]: "text-orange-500",
-  [TaskStatus.NEW]: "text-black",
+  [TaskStatus.COMPLETED]: "line-through text-success-500",
+  [TaskStatus.IN_PROGRESS]: "text-primary-500",
+  [TaskStatus.NEW]: "text-secondary-800",
+};
+
+const STATUS_ICONS = {
+  [TaskStatus.COMPLETED]: <FaCheck className="text-success-500" />,
+  [TaskStatus.IN_PROGRESS]: <FaSpinner className="text-primary-500" />,
+  [TaskStatus.NEW]: <FaRegCircle className="text-secondary-800" />,
 };
 
 export const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
@@ -19,6 +26,10 @@ export const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onChangeStatus(task.id, Number(e.target.value) as TaskStatus);
+  };
+
+  const handleStatusClick = (status: TaskStatus) => {
+    onChangeStatus(task.id, status);
   };
 
   const handleDeleteClick = () => {
@@ -34,30 +45,72 @@ export const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
     setShowConfirmation(false);
   };
 
-  return (
-    <div className="flex items-center justify-between border-b py-2">
-      <span className={STATUS_STYLES[task.status]}>
-        {task.title}
-      </span>
-
-      <div className="flex gap-2">    
-        <select
-          value={task.status}
-          onChange={handleStatusChange}
-          className="border rounded px-2 py-1"
-        >
-          <option value={TaskStatus.NEW}>New</option>
-          <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
-          <option value={TaskStatus.COMPLETED}>Completed</option>
-        </select>
-
+  const statusIconsMenu = (
+    <div className="flex items-center space-x-3">
+      {Object.entries(STATUS_ICONS).map(([statusValue, icon]) => (
         <button
-          onClick={handleDeleteClick}
-          className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
+          key={statusValue}
+          onClick={() => handleStatusClick(Number(statusValue) as TaskStatus)}
+          className={`p-1.5 rounded-full transition focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-opacity-50 ${
+            task.status === Number(statusValue)
+              ? "bg-primary-100 text-primary-600 font-medium"
+              : "hover:bg-secondary-50"
+          }`}
+          aria-label={`Mark as ${TaskStatus[Number(statusValue)]}`}    
         >
-          Delete
+          {icon}
         </button>
+      ))}
+    </div>
+  );
+
+  const desktopControls = (
+    <div className="hidden sm:flex gap-2 flex-shrink-0">    
+      <select
+        value={task.status}
+        onChange={handleStatusChange}
+        className="form-select text-secondary-700"
+      >
+        <option value={TaskStatus.NEW}>New</option>
+        <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
+        <option value={TaskStatus.COMPLETED}>Completed</option>
+      </select>
+
+      <button
+        onClick={handleDeleteClick}
+        className="btn-danger btn-sm"
+      >
+        Delete
+      </button>
+    </div>
+  );
+  
+  const mobileControls = (
+    <div className="flex sm:hidden items-center gap-2 flex-shrink-0">
+      {statusIconsMenu}
+      <button
+        onClick={handleDeleteClick}
+        className="p-1.5 text-danger-500 hover:bg-danger-50 rounded-full transition focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-opacity-50"
+        aria-label="Delete task"
+      >
+        <FaTrash />
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="flex items-center justify-between p-2 mb-3 rounded-lg border border-secondary-300 bg-white hover:shadow transition">
+      <div className="flex-1 mr-4 overflow-hidden">
+        <span 
+          className={`font-medium truncate block ${STATUS_STYLES[task.status]}`}
+          title={task.title}
+        >
+          {task.title}
+        </span>
       </div>
+
+      {desktopControls}
+      {mobileControls}
       
       <ConfirmationDialog
         isOpen={showConfirmation}

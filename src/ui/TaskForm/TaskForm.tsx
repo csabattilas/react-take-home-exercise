@@ -49,7 +49,7 @@ export const TaskForm = ({
   };
 
   const errorMessage = submitAttempted && error ? (
-    <div id="task-error" className="text-red-500 text-sm mt-1 font-medium">
+    <div id="task-error" className="text-danger-500 text-sm mt-1 font-medium">
       {error}
     </div>
   ) : null;
@@ -65,15 +65,13 @@ export const TaskForm = ({
           required
           minLength={3}
           maxLength={50}
-          className={`flex-grow border rounded-l py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-            submitAttempted && error ? "border-red-500 bg-red-50" : "border-gray-300"
-          }`}
+          className={`form-input flex-grow rounded-l ${submitAttempted && error ? "border-danger-500 bg-danger-50" : "border-secondary-300"}`}
           aria-invalid={!!error}
           aria-describedby={error ? "task-error" : undefined}
         />
         <button 
           type="submit" 
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded-r transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="btn-primary rounded-l-none"
         >
           Add
         </button>

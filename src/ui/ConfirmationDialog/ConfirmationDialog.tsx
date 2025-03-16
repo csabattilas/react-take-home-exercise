@@ -28,7 +28,7 @@ export const ConfirmationDialog = ({
 
   const highlightedTextDisplay = hasHighlightedText ? (
     <div className="text-center my-3">
-      <span className="font-medium text-gray-800 bg-gray-100 px-3 py-1 rounded-md break-all">
+      <span className="font-medium text-secondary-800 bg-secondary-100 px-3 py-1 rounded-md break-all">
         {highlightedText}
       </span>
     </div>
@@ -42,19 +42,19 @@ export const ConfirmationDialog = ({
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       contentLabel={title}
     >
-      <h3 className="text-lg font-medium mb-4">{title}</h3>
-      <p className="mb-2">{message}</p>
+      <h3 className="text-lg font-medium mb-4 text-secondary-900">{title}</h3>
+      <p className="mb-2 text-secondary-700">{message}</p>
       {highlightedTextDisplay}
       <div className="flex justify-center gap-3 mt-6">
         <button
           onClick={onCancel}
-          className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 transition-colors"
+          className="btn-secondary"
         >
           {cancelText}
         </button>
         <button
           onClick={onConfirm}
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+          className="btn-danger"
         >
           {confirmText}
         </button>
