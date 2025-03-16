@@ -7,7 +7,7 @@ export const taskReducer = (state: Task[], action: TaskAction): Task[] => {
       return [
         ...state,
         {
-          id: new Date().getTime(),
+          id: new Date().getTime(), // need unique ids
           title: action.title,
           status: TaskStatus.NEW,
         },

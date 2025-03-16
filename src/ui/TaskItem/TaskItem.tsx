@@ -25,7 +25,10 @@ export const TaskItem = ({ task, onChangeStatus, onDelete }: TaskItemProps) => {
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    onChangeStatus(task.id, Number(e.target.value) as TaskStatus);
+    // in angular i could push the typed value here. 
+    // perhaps in react there are ways to do that too?
+    const newStatus = Number(e.target.value) as TaskStatus; 
+    onChangeStatus(task.id, newStatus); 
   };
 
   const handleStatusClick = (status: TaskStatus) => {
