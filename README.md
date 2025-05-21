@@ -1,8 +1,8 @@
-# React Take-Home Challenge: Task Manager App
+# React: Task Manager App
 
 ## Overview
 
-This exercise is designed to assess your proficiency with React, TypeScript and Tailwind CSS. In this project, you'll work on a simple Task Manager application that allows users to add, view, and manage tasks. Your goal is to review the existing codebase, identify issues, and implement fixes and enhancements.
+This exercise is designed to assess  proficiency with React, TypeScript and Tailwind CSS. In this project, you'll work on a simple Task Manager application that allows users to add, view, and manage tasks. Your goal is to review the existing codebase, identify issues, and implement fixes and enhancements.
 
 Your work will be evaluated on:
 
@@ -22,26 +22,20 @@ Ensure you have the following installed:
 
 ### Setup Instructions
 
-1. **Clone the repository:**
 
-   ```bash
-   git clone git@github.com:halcyonmobile/react-take-home-exercise.git
-   pushd react-take-home-exercise
-   ```
-
-2. **Install dependencies:**
+1. **Install dependencies:**
 
    ```bash
    pnpm i
    ```
 
-3. **Start the development server:**
+2. **Start the development server:**
 
    ```bash
    pnpm dev
    ```
 
-4. **View the app:**
+3. **View the app:**
 
    Open your browser and navigate to `http://localhost:5173` (or the port specified in your terminal) to see the application in action.
 
